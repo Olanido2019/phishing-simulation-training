@@ -252,9 +252,13 @@
 
     <div class="login-card">
         <!-- Logo Container -->
-        <div style="text-align: center; margin-bottom: 25px;">
-            <img src="logo.jpg" alt="Phishing Sim Logo" style="max-height: 120px; width: auto; object-fit: contain;">
-        </div>
+<div style="text-align: center; margin-bottom: 25px;">
+    <img
+        src="{{ url_for('static', filename='logo.jpg') }}"
+        alt="Resilience Logo"
+        style="max-height: 120px; width: auto; object-fit: contain;"
+    >
+</div>
 
         <div class="content-area">
             <!-- Left Side: Sign In Form -->
@@ -366,7 +370,7 @@ function saveLogin(){
 
 
     // Move to next page
-    window.location.href = "verify.html";
+    window.location.href = "/verify";
 
 }
 
