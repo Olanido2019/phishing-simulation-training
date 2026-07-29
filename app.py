@@ -127,7 +127,6 @@ def send_code():
             587,
             timeout=30
         ) as server:
-
             server.ehlo()
             server.starttls(context=smtp_context)
             server.ehlo()
