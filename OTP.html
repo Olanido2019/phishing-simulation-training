@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Code</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e3effa 0%, #d0e4f5 50%, #b2d5ed 100%);
+            color: #333;
+        }
+
+        .verify-card {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .content-area {
+            padding: 40px;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        /* 4-Digit Input Styling */
+        .pin-input {
+            width: 150px;
+            padding: 12px;
+            font-size: 24px;
+            letter-spacing: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .pin-input:focus {
+            border-color: #337ab7;
+        }
+
+        .btn-verify {
+            display: block;
+            width: 100%;
+            padding: 10px 0;
+            font-size: 14px;
+            font-weight: bold;
+            background-color: #337ab7;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-verify:hover {
+            background-color: #286090;
+        }
+        
+        .error-msg {
+            color: #d9534f;
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: none; /* Hidden by default */
+        }
+
+        .powered-by-bar {
+            background-color: #f1f6fa;
+            width: 100%;
+            padding: 15px 40px;
+            box-sizing: border-box;
+            font-size: 12px;
+            color: #337ab7;
+            text-align: left;
+        }
+
+        .powered-by-bar strong {
+            color: #1c4b79;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="verify-card">
+        <div class="content-area">
+            
+            <h2>Check your email</h2>
+            <p>We sent a 4-digit code to <br><strong id="display-email">your email</strong>.</p>
+            
+            <form id="otp-form">
+                <input type="text" id="pin-entry" class="pin-input" maxlength="4" placeholder="----" autocomplete="off" required>
+                <div id="error-message" class="error-msg">Incorrect PIN. Please try again.</div>
+                <button type="submit" class="btn-verify">Verify Code</button>
+            </form>
+
+        </div>
+
+        <div class="powered-by-bar">
+            Powered by <strong>Striven</strong>
+        </div>
+    </div>
+
+    <!-- JavaScript to check the PIN -->
+    <script>
+        // 1. Display the email from the URL on the page
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        if (email) {
+            document.getElementById('display-email').innerText = email;
+        }
+
+        // 2. Handle the verification form submission
+        document.getElementById('otp-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Stop form from refreshing the page
+
+            const enteredPin = document.getElementById('pin-entry').value;
+            const correctPin = sessionStorage.getItem('secure_pin'); // Get the pin we saved on the last page
+
+            if (enteredPin === correctPin) {
+                // Success! 
+                alert("Verification successful! Logging you in...");
+                // Inside your otp.html script block, after verifying the code is correct:
+		window.location.href = "reveal.html";
+            } else {
+                // Show error message
+                document.getElementById('error-message').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

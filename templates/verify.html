@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Login</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e3effa 0%, #d0e4f5 50%, #b2d5ed 100%);
+            color: #333;
+        }
+
+        .verify-card {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .content-area {
+            padding: 40px;
+        }
+
+        .icon-container {
+            margin-bottom: 20px;
+        }
+        
+        .icon-container svg {
+            width: 48px;
+            height: 48px;
+            fill: #337ab7;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px 0;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 3px;
+            box-sizing: border-box;
+            transition: background-color 0.2s;
+        }
+
+        .btn-yes {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+        }
+
+        .btn-yes:hover {
+            background-color: #4cae4c;
+        }
+
+        .btn-no {
+            background-color: #f5f5f5;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .btn-no:hover {
+            background-color: #e0e0e0;
+        }
+
+        .powered-by-bar {
+            background-color: #f1f6fa;
+            width: 100%;
+            padding: 15px 40px;
+            box-sizing: border-box;
+            font-size: 12px;
+            color: #337ab7;
+            text-align: left;
+        }
+
+        .powered-by-bar strong {
+            color: #1c4b79;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="verify-card">
+        <div class="content-area">
+            <div class="icon-container">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                </svg>
+            </div>
+            
+            <h2>Verify it is you logging in</h2>
+            <p>We detected a sign-in attempt. Please confirm that this was you to continue securely.</p>
+            
+            <div class="button-group">
+    <button
+        id="yesButton"
+        type="button"
+        class="btn btn-yes"
+        onclick="sendCodeAndRedirect()">
+        Yes, it is me
+    </button>
+
+    <a href="/cancel" class="btn btn-no">
+        No, it is not me
+    </a>
+</div>
+        </div>
+
+        <div class="powered-by-bar">
+            Powered by <strong>Striven</strong>
+        </div>
+    </div>
+
+    <!-- JavaScript to handle the "Yes" button -->
+    <script>
+    async function sendCodeAndRedirect() {
+        const yesButton = document.getElementById("yesButton");
+        const userEmail = localStorage.getItem("userEmail");
+
+        if (!userEmail) {
+            alert("No login session was found. Please return to the login page.");
+            window.location.href = "/";
+            return;
+        }
+
+        // Generate a secure random six-digit PIN
+        const randomValues = new Uint32Array(1);
+        crypto.getRandomValues(randomValues);
+
+        	const generatedPin = String(
+    		1000 + (randomValues[0] % 9000)
+	);
+
+        // Prevent multiple clicks while the request is running
+        yesButton.disabled = true;
+        yesButton.textContent = "Sending code...";
+
+        try {
+            const response = await fetch("/api/send-code", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: userEmail,
+                    pin: generatedPin
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || result.status !== "success") {
+                throw new Error(
+                    result.message || "The verification code could not be sent."
+                );
+            }
+
+            // Save the code for the OTP page
+            sessionStorage.setItem("secure_pin", generatedPin);
+            sessionStorage.setItem("otp_email", userEmail);
+
+            alert(`A verification code was sent to ${userEmail}.`);
+
+            // Use the Flask route instead of the HTML filename
+            window.location.href =
+                `/otp?email=${encodeURIComponent(userEmail)}`;
+
+        } catch (error) {
+            console.error("Verification email error:", error);
+
+            alert(
+                "The verification code could not be sent.\n\n" +
+                error.message
+            );
+
+            yesButton.disabled = false;
+            yesButton.textContent = "Yes, it is me";
+        }
+    }
+</script>
+</body>
+</html>

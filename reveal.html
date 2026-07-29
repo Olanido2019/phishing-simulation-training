@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Notice - Resilience Inc.</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e2e8f0; 
+            color: #333;
+        }
+        .header {
+            background-color: #0f172a; 
+            color: white;
+            padding: 15px 30px;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #3b82f6;
+        }
+        .container {
+            max-width: 750px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden; 
+        }
+        .hero-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 4px solid #ef4444; 
+            display: block;
+        }
+        .content {
+            padding: 40px;
+        }
+        .alert-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .alert-title {
+            color: #ef4444;
+            font-size: 26px;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .primary-message {
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #1e293b;
+        }
+        .mandatory-warning {
+            font-weight: 600;
+            color: #991b1b;
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            padding: 16px 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.5;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        
+        .tech-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+        .reasons-box {
+            background-color: #0f172a; 
+            color: #e2e8f0;
+            padding: 20px 25px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+            font-family: 'Consolas', 'Courier New', monospace; 
+        }
+        .reasons-box h3 {
+            margin-top: 0;
+            color: #60a5fa;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .reasons-box ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+        .reasons-box li {
+            margin-bottom: 14px;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        .reasons-box li strong {
+            color: #f8fafc;
+            font-size: 15px;
+        }
+        .poster-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Prevents the cartoon from getting cropped */
+            background-color: #f8fafc; /* Gives the cartoon a clean, light backdrop */
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 15px; 
+            box-sizing: border-box;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+        .btn:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 8px rgba(37, 99, 235, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        Resilience Inc. | Information Security Team
+    </div>
+
+    <div class="container">
+        <!-- Techy/Security Hero Image Placeholder -->
+        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80" alt="Cybersecurity Server" class="hero-image">
+        
+        <div class="content">
+            <div class="alert-header">
+                <!-- SVG Warning Icon -->
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <h1 class="alert-title">Simulation Alert</h1>
+            </div>
+            
+            <div class="primary-message">
+                <strong>You have just fallen for a phishing simulation conducted by Resilience Inc.</strong>
+            </div>
+
+            <div class="mandatory-warning">
+                You are required to watch the following video and complete the Phishing attack training campaign. <br>Failure to do so may get you written up.
+            </div>
+
+            <div class="tech-section">
+                <div class="reasons-box">
+                    <h3>> System Logs: Red Flags</h3>
+                    <ul>
+                        <li><strong>Rushed Action:</strong> The message tried to panic you into acting quickly (like saying "immediate verification required") so you wouldn't stop to think.</li>
+                        <li><strong>Wrong Web Address:</strong> If you look closely at the URL bar at the top of your browser, the website link doesn't perfectly match our real company address.</li>
+                        <li><strong>Unexpected Login:</strong> Our real systems won't suddenly ask you to type in a PIN code or password out of nowhere. If you aren't expecting a prompt, stop and ask IT!</li>
+                    </ul>
+                </div>
+                <!-- Cartoon Scammer Graphic -->
+                <div>
+                    <img src="https://img.icons8.com/color/256/hacker.png" alt="Cartoon Scammer" class="poster-image">
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <a href="training.html" class="btn">Proceed to Training Module</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

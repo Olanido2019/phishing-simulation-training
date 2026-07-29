@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Awareness Assessment - Resilience Inc.</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e2e8f0; color: #333; }
+        .header { background-color: #0f172a; color: white; padding: 15px 30px; font-weight: 600; font-size: 15px; display: flex; align-items: center; border-bottom: 2px solid #3b82f6; }
+        .container { max-width: 700px; margin: 40px auto; background: white; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 40px; }
+        .progress-container { width: 100%; background-color: #e2e8f0; border-radius: 8px; height: 10px; margin-bottom: 30px; overflow: hidden; }
+        .progress-bar { height: 100%; background-color: #2563eb; width: 0%; transition: width 0.3s ease; }
+        #question-text { font-size: 20px; font-weight: 600; color: #1e293b; margin-bottom: 25px; line-height: 1.4; }
+        .options-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+        .option-label { display: block; padding: 15px 20px; border: 2px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.2s ease; background-color: #f8fafc; }
+        .option-label:hover { background-color: #f1f5f9; border-color: #94a3b8; }
+        .option-input { display: none; }
+        .option-input:checked + .option-label { border-color: #2563eb; background-color: #eff6ff; font-weight: 600; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1); }
+        .btn-container { display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+        .btn { background-color: #2563eb; color: white; border: none; padding: 12px 30px; font-size: 16px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .btn:hover { background-color: #1d4ed8; }
+        .btn:disabled { background-color: #94a3b8; cursor: not-allowed; opacity: 0.5; }
+        .btn-outline { background-color: transparent; color: #475569; border: 2px solid #cbd5e1; }
+        .btn-outline:hover:not(:disabled) { background-color: #f1f5f9; border-color: #94a3b8; }
+        #results-screen { display: none; text-align: center; }
+        .score-circle { width: 150px; height: 150px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: bold; margin: 0 auto 20px auto; color: white; }
+        .pass-circle { background-color: #22c55e; } 
+        .fail-circle { background-color: #ef4444; } 
+        .result-title { font-size: 24px; margin-bottom: 10px; }
+        .result-msg { color: #64748b; margin-bottom: 30px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        Resilience Inc. | Information Security Team
+    </div>
+
+    <div class="container">
+        <!-- Quiz Interface -->
+        <div id="quiz-screen">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div id="question-text">Loading question...</div>
+            
+            <div class="options-container" id="options-container">
+                <!-- JavaScript will inject options here -->
+            </div>
+
+            <div class="btn-container">
+                <button class="btn btn-outline" id="prev-btn" onclick="prevQuestion()" disabled>Previous</button>
+                <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Final Results Interface -->
+        <div id="results-screen">
+            <div id="score-circle" class="score-circle">0%</div>
+            <h2 class="result-title" id="result-title">Assessment Complete</h2>
+            <p class="result-msg" id="result-msg"></p>
+            
+            <div class="btn-container" style="justify-content: center;">
+                <button class="btn" id="action-btn" onclick="handleAction()"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- QUIZ DATA (10 Questions) ---
+        const quizData = [
+            { question: "What is the primary goal of most phishing attacks?", options: ["To install a new operating system", "To trick you into revealing sensitive information or credentials", "To speed up your internet connection", "To test the company's hardware"], answer: 1 },
+            { question: "You receive an email from the CEO urging you to immediately buy gift cards and send them the codes. What should you do?", options: ["Buy the gift cards to keep the CEO happy", "Reply to the email asking for confirmation", "Contact the CEO directly via a known, trusted method (like a phone call or Slack) to verify", "Forward it to your personal email"], answer: 2 },
+            { question: "Which of the following is a common red flag to look for in a phishing link?", options: ["The website uses 'https://'", "Subtle misspellings in the domain name (e.g., resiilence.com instead of resilience.com)", "The email contains a corporate logo", "The email is addressed to you directly"], answer: 1 },
+            { question: "Why do threat actors often create a 'sense of urgency' in their emails?", options: ["Because they are on a tight schedule", "To bypass your critical thinking so you act before analyzing the request", "To ensure their emails don't go to spam", "Because company policies require fast responses"], answer: 1 },
+            { question: "What is 'Spear Phishing'?", options: ["A highly targeted attack aimed at a specific individual or organization", "Sending millions of generic emails hoping someone clicks", "Using a physical USB drive to infect a computer", "Hacking into a wireless network"], answer: 0 },
+            { question: "True or False: If an email comes from a coworker's legitimate email address, it is 100% safe to click the links inside.", options: ["True", "False"], answer: 1 },
+            { question: "If you suspect you have clicked a malicious link or provided your password to a scammer, what is your immediate next step?", options: ["Wait to see if anything bad happens", "Restart your computer", "Disconnect from the network and contact the IT/Security Helpdesk immediately", "Delete the email and tell no one"], answer: 2 },
+            { question: "You receive an unexpected document from 'HR' requiring you to 'Enable Macros' to view it. What is the safest action?", options: ["Enable macros to read the important document", "Forward it to your personal email to open safely", "Do not enable macros and verify the email with HR directly", "Reply to the sender asking if it's safe"], answer: 2 },
+            { question: "What is Multi-Factor Authentication (MFA) fatigue or MFA spamming?", options: ["Being tired of typing passwords", "An attacker repeatedly sending MFA push notifications hoping you approve one out of frustration", "A system error that sends too many texts", "When your authenticator app stops working"], answer: 1 },
+            { question: "If a webpage asks for your Resilience Inc. login credentials but you don't remember clicking a login link, what should you verify first?", options: ["The website's URL in the address bar", "The color of the login button", "Whether your mouse is working", "If the website has a lock icon (HTTPS)"], answer: 0 }
+        ];
+
+        let currentQuestion = 0;
+        let userAnswers = new Array(quizData.length).fill(null); 
+        const passThreshold = 80;
+
+        const questionText = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("options-container");
+        const nextBtn = document.getElementById("next-btn");
+        const prevBtn = document.getElementById("prev-btn");
+        const progressBar = document.getElementById("progress-bar");
+        const quizScreen = document.getElementById("quiz-screen");
+        const resultsScreen = document.getElementById("results-screen");
+
+        function loadQuestion() {
+            prevBtn.disabled = currentQuestion === 0;
+            
+            if (currentQuestion === quizData.length - 1) {
+                nextBtn.innerText = "Submit";
+                nextBtn.style.backgroundColor = "#16a34a";
+            } else {
+                nextBtn.innerText = "Next";
+                nextBtn.style.backgroundColor = "#2563eb";
+            }
+            
+            nextBtn.disabled = userAnswers[currentQuestion] === null;
+            optionsContainer.innerHTML = "";
+            
+            const progress = (currentQuestion / quizData.length) * 100;
+            progressBar.style.width = progress + "%";
+
+            const currentQuizData = quizData[currentQuestion];
+            questionText.innerText = `Q${currentQuestion + 1} of 10. ` + currentQuizData.question;
+
+            currentQuizData.options.forEach((option, index) => {
+                const inputId = `option_${index}`;
+                const isChecked = userAnswers[currentQuestion] === index ? "checked" : "";
+                
+                const radioHtml = `<input type="radio" name="quiz_option" id="${inputId}" class="option-input" value="${index}" onchange="selectOption(${index})" ${isChecked}>`;
+                const labelHtml = `<label for="${inputId}" class="option-label">${option}</label>`;
+                
+                const div = document.createElement("div");
+                div.innerHTML = radioHtml + labelHtml;
+                optionsContainer.appendChild(div);
+            });
+        }
+
+        function selectOption(index) {
+            userAnswers[currentQuestion] = index;
+            nextBtn.disabled = false; 
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function showResults() {
+            quizScreen.style.display = "none";
+            resultsScreen.style.display = "block";
+
+            let finalScore = 0;
+            for (let i = 0; i < quizData.length; i++) {
+                if (userAnswers[i] === quizData[i].answer) {
+                    finalScore++;
+                }
+            }
+
+            const percentage = Math.round((finalScore / quizData.length) * 100);
+            
+            const scoreCircle = document.getElementById("score-circle");
+            const resultTitle = document.getElementById("result-title");
+            const resultMsg = document.getElementById("result-msg");
+            const actionBtn = document.getElementById("action-btn");
+
+            scoreCircle.innerText = percentage + "%";
+
+            if (percentage >= passThreshold) {
+                scoreCircle.classList.add("pass-circle");
+                resultTitle.innerText = "Congratulations, you passed!";
+                resultTitle.style.color = "#16a34a"; 
+                resultMsg.innerText = "You have successfully completed the Information Security phishing remediation training. Your compliance record has been updated.";
+                actionBtn.innerText = "Finish Simulation";
+                actionBtn.style.backgroundColor = "#16a34a";
+            } else {
+                scoreCircle.classList.add("fail-circle");
+                resultTitle.innerText = "Training Failed";
+                resultTitle.style.color = "#dc2626"; 
+                resultMsg.innerText = `You scored ${percentage}%. The passing threshold is ${passThreshold}%. You are required to review the materials and retake the assessment.`;
+                actionBtn.innerText = "Retake Training";
+            }
+        }
+
+        async function handleAction() {
+            let finalScore = 0;
+            for (let i = 0; i < quizData.length; i++) {
+                if (userAnswers[i] === quizData[i].answer) {
+                    finalScore++;
+                }
+            }
+            const percentage = Math.round((finalScore / quizData.length) * 100);
+            const passed = percentage >= passThreshold;
+            
+            const actionBtn = document.getElementById("action-btn");
+            const originalText = actionBtn.innerText;
+            actionBtn.innerText = "Saving Results...";
+            actionBtn.disabled = true;
+
+            const userEmail = localStorage.getItem("userEmail") || "Unknown Email";
+            const loginTime = localStorage.getItem("loginTime") || "Unknown Time";
+            const completionTime = new Date().toLocaleString();
+            
+            const payload = {
+                email: userEmail,
+                loginTime: loginTime,
+                score: percentage + "%",
+                passed: passed ? "Pass" : "Fail",
+                completionTime: completionTime
+            };
+
+            const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHrs8oDRbhc2Ow4yZQsranSZwjWr86wsRJZb6Doct4HHP7A3cqcdV3H3FfyvPrIgVOiQ/exec"; 
+
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (passed) {
+                    alert("Simulation Complete! Your results have been logged to the database.");
+                    window.location.href = "/"; 
+                } else {
+                    window.location.href = "training.html"; 
+                }
+            } catch (error) {
+                console.error("Failed to send data to Google Sheets:", error);
+                alert("Network error: Could not log results, but simulation is complete.");
+                if (!passed) {
+                    window.location.href = "training.html";
+                }
+            } finally {
+                actionBtn.innerText = originalText;
+                actionBtn.disabled = false;
+            }
+        }
+
+        // Initialize first question on load
+        loadQuestion();
+    </script>
+</body>
+</html>

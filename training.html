@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action Required: Security Awareness Training</title>
+    <style>
+        :root {
+            --primary-red: #d32f2f;
+            --light-red: #fde8e8;
+            --dark-blue: #0f172a;
+            --text-main: #334155;
+            --bg-color: #f8fafc;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--dark-blue);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* ... [Keep the alert-box, policy-warning, educational-section, and red-flags-grid styles from the previous version] ... */
+
+        .video-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 6px;
+            margin: 20px 0;
+            background-color: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* New Navigation Button Styles */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 20px;
+        }
+
+        .btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            flex: 1; /* Makes buttons equal width */
+            max-width: 250px;
+        }
+
+        .btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background-color: #64748b;
+        }
+
+        .btn-secondary:hover {
+            background-color: #475569;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-bottom: 20px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>Resilience Inc. | Information Security Team</h2>
+        <div>Internal Simulation Alert</div>
+    </header>
+
+    <div class="container">
+        
+        <!-- The Training Requirement -->
+        <div class="video-section">
+            <h2>Remediation Training - Module 1</h2>
+            <p>Please watch the following video on identifying phishing indicators before proceeding to the next section.</p>
+            
+            <div class="video-container">
+                <iframe src="https://drive.google.com/file/d/1m1V4Oitr8_dvQfsxinS7BVo4g2GSNUak/preview" title="Phishing Training Video" allowfullscreen></iframe>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goPrevious()">Previous</button>
+                <button class="btn" onclick="goNext()">Next</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>If you have questions regarding this simulation, please contact the Resilience Inc. Information Security Helpdesk.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        function goPrevious() {
+            // Update this to point to wherever they should go if they click back
+            window.location.href = "otp.html"; 
+        }
+
+        function goNext() {
+            // Update this to point to the next page in your training campaign
+            window.location.href = "quiz.html"; 
+        }
+    </script>
+
+</body>
+</html>
